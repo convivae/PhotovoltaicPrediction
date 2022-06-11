@@ -1,2 +1,3 @@
 # PhotovoltaicPrediction
-线性回归预测光伏功率
+
+课程作业

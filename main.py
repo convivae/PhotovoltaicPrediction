@@ -69,17 +69,12 @@ def liner_module(data_iter, features, labels, num_epochs):
         print("parameters: ", parameters)
 
 
-def score(true_value, predict_value):
-    length = len(true_value)
-    mse_loss = 0
-    for i in range(length):
+def print_test_res(true_value, predict_value):
+    for i in range(len(true_value)):
         print("Inference result is {}, the corresponding label is {}".format(predict_value[i], true_value[i]))
-        mse_loss += (true_value[i] - predict_value[i]) ** 2
-    mse_loss /= length
-    print("mse loss is: ", mse_loss)
 
 
-def test(model_path="linear.pth"):
+def test(model_path="linear.pth", print_res=False):
     net = nn.Sequential(nn.Linear(6, 1)).to(get_device())
     net.load_state_dict(torch.load(model_path))
     features, _, true_power = parse_data.load_data(parse_data.new_test_path)
@@ -90,7 +85,9 @@ def test(model_path="linear.pth"):
     prediction = prediction.cpu().detach().numpy()
 
     draw(true_power, prediction, "true", "predict")
-    score(true_power, prediction)
+
+    if print_res:
+        print_test_res(true_power, prediction)
 
 
 def train():
@@ -101,5 +98,5 @@ def train():
 
 
 if __name__ == '__main__':
-    # train()
+    train()
     test()

@@ -37,7 +37,7 @@ def pre_process_data(old_file_path, new_file_path):
 
 def load_data(file_path):
     light_frame = pd.read_csv(file_path, sep=',')
-    print(light_frame.describe())
+    # print(light_frame.describe())
     param_columns = ['t', 'AmbiTemp', 'Irradiance', 'ModuleTemp', 'InclAngle', 'Current', 'Voltage', 'Humidity']
 
     value = light_frame.pop('TruePower')

@@ -71,7 +71,7 @@ def liner_module(data_iter, features, labels, num_epochs):
 
 def print_test_res(true_value, predict_value):
     for i in range(len(true_value)):
-        print("Inference result is {}, the corresponding label is {}".format(predict_value[i], true_value[i]))
+        print("predict: {}, corresponding: {}".format(predict_value[i], true_value[i]))
 
 
 def test(model_path="linear.pth", print_res=False):
@@ -98,5 +98,5 @@ def train():
 
 
 if __name__ == '__main__':
-    train()
-    test()
+    # train()
+    test(print_res=True)

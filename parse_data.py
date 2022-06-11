@@ -72,6 +72,6 @@ def process():
 
 
 if __name__ == '__main__':
-    # process()
-    load_data(new_train_path)
+    process()
+    # load_data(new_train_path)
     # load_data(new_test_path)

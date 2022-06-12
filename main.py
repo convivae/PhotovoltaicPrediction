@@ -23,6 +23,18 @@ def draw(x, y, x_label, y_label):
     plt.show()
 
 
+def draw_comp(y1, y2, y1_label, y2_label, x_label, y_label):
+    x = np.arange(len(y1))
+
+    plt.plot(x, y1, label=y1_label)
+    plt.plot(x, y2, label=y2_label)
+
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.legend(loc="best")
+    plt.show()
+
+
 # convert a df to tensor to be used in pytorch
 def df_to_tensor(df):
     device = get_device()
@@ -74,17 +86,34 @@ def print_test_res(true_value, predict_value):
         print("predict: {}, corresponding: {}".format(predict_value[i], true_value[i]))
 
 
+def cal_r2(true_value, predict_value):
+    a, b = 0.0, 0.0
+    for i in range(len(true_value)):
+        a += (predict_value[i] - parse_data.mean_values) ** 2
+        b += (true_value[i] - parse_data.mean_values) ** 2
+    # 计算 R^2
+    R_2 = a / b
+    print("R^2: ", R_2)
+
+
 def test(model_path="linear.pth", print_res=False):
     net = nn.Sequential(nn.Linear(6, 1)).to(get_device())
     net.load_state_dict(torch.load(model_path))
-    features, _, true_power = parse_data.load_data(parse_data.new_test_path)
 
+    # 计算 R^2, 读取 train.csv 进行计算
+    features, _, true_power = parse_data.load_data(parse_data.new_train_path)
     prediction = net(df_to_tensor(features))
     prediction = (prediction * (parse_data.max_values - parse_data.min_values) + parse_data.mean_values)
+    prediction = prediction.cpu().detach().numpy()
+    cal_r2(true_power, prediction)
 
+    # 进行预测， 读取 test.csv 进行计算
+    features, _, true_power = parse_data.load_data(parse_data.new_test_path)
+    prediction = net(df_to_tensor(features))
+    prediction = (prediction * (parse_data.max_values - parse_data.min_values) + parse_data.mean_values)
     prediction = prediction.cpu().detach().numpy()
 
-    draw(true_power, prediction, "true", "predict")
+    draw_comp(true_power, prediction, "true", "predict", "", "compare")
 
     if print_res:
         print_test_res(true_power, prediction)
@@ -99,4 +128,4 @@ def train():
 
 if __name__ == '__main__':
     # train()
-    test(print_res=True)
+    test(print_res=False)
